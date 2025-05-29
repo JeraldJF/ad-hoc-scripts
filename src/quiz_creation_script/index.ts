@@ -93,7 +93,7 @@ async function processQuestionCsv() {
                             if (headers.includes(isCorrectKey)) {
                                 optionPairs.push({
                                     text: row[textKey],
-                                    isCorrect: String(row[isCorrectKey]).toLowerCase() === 'true'
+                                    isCorrect: String(row[isCorrectKey]).toLowerCase().trim() === 'true'
                                 });
                             }
                         }
