@@ -7,6 +7,8 @@ import path from 'path';
 import { getAuthToken } from '../services/authService';
 import globalConfig from '../globalConfigs';
 import _ from 'lodash';
+import { config } from './config/config';
+
 interface EnrollmentResult {
     userId: string;
     learnerProfile: string;
@@ -187,6 +189,7 @@ async function processEnrollments() {
             console.error(`Error processing enrollments for ${email}:`, errorMessage);
         }
 
+        await new Promise(resolve => setTimeout(resolve, config.enrollUserWaitInterval));
     }
     writeResultsToCSV(updatedheaderRow, results);
 
