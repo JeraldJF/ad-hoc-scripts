@@ -384,6 +384,7 @@ const processQuizUpdates = async () => {
                 await new Promise(resolve => setTimeout(resolve, globalConfig.waitInterval));
             }
         } catch (error: any) {
+            console.log("Failed to update quiz content for quiz code: ", quiz_code, error.message);
             statusReport.forEach(row => {
                 if (row.quiz_code === quiz_code) {
                     row.status = 'Quiz Update Failed';
