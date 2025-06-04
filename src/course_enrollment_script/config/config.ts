@@ -6,5 +6,6 @@ export const config = {
     clientId: globalConfig.clientId || '',
     clientSecret: globalConfig.clientSecret || '',
     grant_type: globalConfig.grant_type || 'password',
-    channelId: globalConfig.channelId || '01429195271738982411'
+    channelId: globalConfig.channelId || '01429195271738982411',
+    enrollUserWaitInterval: process.env.ENROLL_USER_WAIT_INTERVAL ? Number(process.env.ENROLL_USER_WAIT_INTERVAL) : 0
 }

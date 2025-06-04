@@ -6,7 +6,9 @@ import { courseConfig } from './config/courseConfig';
 import path from 'path';
 import { getAuthToken } from '../services/authService';
 import _ from 'lodash';
+import { config } from './config/config';
 const REQUIRED_HEADERS = ['learner_profile_code', 'email'];
+
 interface EnrollmentResult {
     userId: string;
     learnerProfile: string;
@@ -191,6 +193,8 @@ async function processEnrollments() {
 
             console.error(`Error processing enrollments for ${email}:`, errorMessage);
         }
+
+        await new Promise(resolve => setTimeout(resolve, config.enrollUserWaitInterval));
     }
     writeResultsToCSV(updatedheaderRow, results);
 
