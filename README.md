@@ -149,6 +149,20 @@ To run the course enrollment script:
 npm run start:enroll
 ```
 
+### 4. Quiz language update script
+
+To run the quiz language update script:
+
+1. Place your user to quiz and questions data CSV in the `data` directory in the root folder:
+   - Quiz language update data: `data/user-learner-profile.csv`
+
+2. Set the required environment variables (see Configuration section)
+
+3. Run the script to enroll user to the course:
+```bash
+npm run start:quizUpdate
+```
+
 ## CSV File Format
 
 Each CSV file is like a spreadsheet with rows and columns. The first row contains column names. Below is a guide to what each column means for different CSV files.
@@ -226,6 +240,21 @@ This file links user emails to specific learner profile codes for enrollment.
 Example row:
 `user@example.com,LP001`
 
+### Quiz language update data CSV Columns
+
+Used to define the the quiz code along with attached question codes and language.
+```csv
+quiz_code,question_code,language
+```
+
+| Column                 | Description                                                 |
+| ---------------------- | ----------------------------------------------------------- |
+| `quiz_code`            | Quiz code that has questions attached                       |
+| `question_code`        | Question code that must be updated                          |
+| `language`             | Language of the questions to be updated                     |
+
+Example row:
+`FMPS_C028_QG28_004,FMPS_C028_QG28_Q9_004,Arabic`
 
 ## Status Reports
 
@@ -241,6 +270,9 @@ The scripts will generate status reports in the following locations:
 
 ### Course Enrollment Report
 - `src/reports/enrollment-status.csv`: Contains the course enrollment status for the user.
+
+### Quiz Language Update Report
+- `src/reports/quiz-update-status.csv`: Contains the quiz language update status.
 
 These reports will contain detailed information about the success/failure of each operation, including any error messages if applicable.
 
