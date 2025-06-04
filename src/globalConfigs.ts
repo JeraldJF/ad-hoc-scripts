@@ -16,7 +16,8 @@ const globalConfig = {
     framework: process.env.FRAMEWORK || 'FMPS',
     mimeType: process.env.MIME_TYPE || 'application/vnd.ekstep.ecml-archive',
     creator: process.env.CREATOR || 'Content Creator',
-    waitInterval: Number(process.env.WAIT_INTERVAL) || 5000
+    waitInterval: Number(process.env.WAIT_INTERVAL) || 5000,
+    ALLOWED_LANGUAGES: process.env.ALLOWED_LANGUAGES ? process.env.ALLOWED_LANGUAGES.split(',') : ['English', 'French', 'Arabic']
 }
 
 export default globalConfig;

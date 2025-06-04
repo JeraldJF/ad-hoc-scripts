@@ -7,6 +7,7 @@ import { getAuthToken } from '../services/authService';
 import { searchContent } from '../services/contentService';
 import globalConfig from '../globalConfigs';
 import _ from 'lodash';
+const REQUIRED_HEADERS = ['learner_profile_code', 'learner_profile', 'course_code', 'expiry_date'];
 
 interface CourseMapping {
     [key: string]: Map<string, string>;
@@ -37,7 +38,12 @@ async function processLearnerProfiles() {
 
     // Read learner-course mapping
     const learnerCourseRows = await parseCsv(courseConfig.learnerCoursePath);
-    const headerRow = learnerCourseRows[0];
+    const headerRow = learnerCourseRows[0].map(header => header.trim());
+    const missingHeaders = REQUIRED_HEADERS.filter(h => !headerRow.includes(h));
+    if (missingHeaders.length > 0) {
+        console.log(`Missing required headers: ${missingHeaders.join(', ')}`);
+        throw new Error(`Missing required headers: ${missingHeaders.join(', ')}`);
+    }
     const updatedHeaderRow = ['learner_profile_code', 'status', 'reason'];
     const dataRows = learnerCourseRows.slice(1);
 

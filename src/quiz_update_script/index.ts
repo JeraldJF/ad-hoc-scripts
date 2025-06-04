@@ -5,7 +5,7 @@ import { getAuthToken } from '../services/authService';
 import globalConfig from '../globalConfigs';
 import { routes } from './config/routes';
 import { getAssessmentItem, getContent, publishContent, reviewContent, updateContent } from './service/quizService';
-import { ALLOWED_LANGUAGES, quizConfig, assessmentDefaultValues } from './config/config';
+import { quizConfig, assessmentDefaultValues } from './config/config';
 import parseCsv from '../services/csv';
 const REQUIRED_HEADERS = ['quiz_code', 'question_code', 'language'];
 
@@ -177,7 +177,7 @@ const processQuizUpdates = async () => {
                 const assessmentItem = readResponse.data.result.assessment_item;
                 const language = quizMapping[quiz_code].find(item => item.question_code === question_code)?.language || '';
 
-                if (!ALLOWED_LANGUAGES.includes(language)) {
+                if (!globalConfig.ALLOWED_LANGUAGES.includes(language)) {
                     throw new Error(`Invalid language '${language}'.`);
                 }
 

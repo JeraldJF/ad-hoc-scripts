@@ -85,7 +85,7 @@ export async function createLearnerProfile(learnerCode: string, nodeIds: string[
                         framework: courseConfig.framework,
                         mimeType: "application/vnd.ekstep.content-collection",
                         creator: courseConfig.creator,
-                        expiry_date: record['expiry_date'], // Using 4th row from CSV for expiry_date
+                        expiry_date: record['expiry_date'].trim(), // Using 4th row from CSV for expiry_date
                         primaryCategory: "Learner Profile",
                         children: children
                     }
@@ -141,7 +141,7 @@ export async function updateLearnerProfile(
                                 framework: courseConfig.framework,
                                 mimeType: "application/vnd.ekstep.content-collection",
                                 creator: courseConfig.creator,
-                                expiry_date: record["expiry_date"],
+                                expiry_date: record["expiry_date"].trim(),
                                 primaryCategory: "Learner Profile",
                                 children: childrenArray
                             },

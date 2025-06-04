@@ -46,6 +46,7 @@ interface QuestionBody {
                 copyright: string;
                 qlevel: string;
                 category: string;
+                language: string[];
             };
             max_time: number;
             max_score: number;
@@ -63,7 +64,8 @@ export async function createQuestion(
     code: string,
     title: string,
     optionPairs: { text: string; isCorrect: boolean }[],
-    maxScore: number
+    maxScore: number,
+    language: string
 ): Promise<string> {
     // Filter out any empty options
     const validOptions = optionPairs.filter(pair => pair.text && pair.text.trim() !== '');
@@ -102,6 +104,7 @@ export async function createQuestion(
                     name: `${title}\n`,
                     title: `${title}\n`,
                     copyright: questionConfig.metadata.copyright,
+                    language: [`${language}`],
                     qlevel: "EASY",
                     category: "MCQ"
                 },
@@ -142,6 +145,7 @@ export async function createQuestion(
                     title: `${title}\n`,
                     copyright: questionConfig.metadata.copyright,
                     qlevel: "EASY",
+                    language: [`${language}`],
                     options: [
                         {
                             answer: true,

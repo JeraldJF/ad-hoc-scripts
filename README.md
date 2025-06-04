@@ -149,7 +149,7 @@ To run the course enrollment script:
 npm run start:enroll
 ```
 
-### 4. Quiz language update script
+### 4. Quiz Language Update Script
 
 To run the quiz language update script:
 
@@ -240,9 +240,9 @@ This file links user emails to specific learner profile codes for enrollment.
 Example row:
 `user@example.com,LP001`
 
-### Quiz language update data CSV Columns
+### Quiz Language Update Data CSV Columns
 
-Used to define the the quiz code along with attached question codes and language.
+Used to define the quiz code, associated question code, and target language to be updated.
 ```csv
 quiz_code,question_code,language
 ```
