@@ -39,6 +39,11 @@ const readQuizUpdateCSV = async (): Promise<ParsedCsvResult> => {
         if (missingHeaders.length > 0) {
             throw new Error(`Missing required headers: ${missingHeaders.join(', ')}`);
         }
+        dataRows.forEach((row, index) => {
+            if (row.some(col => col.trim() === '')) {
+                throw new Error(`Empty value found at row ${index + 2}. All columns must be non-empty.`);
+            }
+        });
 
         // Convert each row into an object using the headers
         const parsedRows = dataRows.map(row =>
