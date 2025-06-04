@@ -186,8 +186,6 @@ async function processEnrollments() {
 
             console.error(`Error processing enrollments for ${email}:`, errorMessage);
         }
-
-        await new Promise(resolve => setTimeout(resolve, globalConfig.waitInterval));
     }
     writeResultsToCSV(updatedheaderRow, results);
 
