@@ -128,7 +128,7 @@ export async function publishContent(identifier: string): Promise<void> {
         const response = await axios.post(`${globalConfig.baseUrl}${routes.publishContent}/${identifier}`, body, { headers });
         console.log('Quiz Publish API Response:', response.data);
     } catch (error) {
-        console.error('Quiz Publish API Error:' );
+        console.error('Quiz Publish API Error:');
         throw error;
     }
 }

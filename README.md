@@ -153,12 +153,12 @@ npm run start:enroll
 
 To run the quiz language update script:
 
-1. Place your user to quiz and questions data CSV in the `data` directory in the root folder:
+1. Place the quiz language update CSV file in the `data` directory in the root folder:
    - Quiz language update data: `data/quiz-update.csv`
 
 2. Set the required environment variables (see Configuration section)
 
-3. Run the script to update quiz language:
+3. Run the quiz language update script:
 ```bash
 npm run start:quizUpdate
 ```

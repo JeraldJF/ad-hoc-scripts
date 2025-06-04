@@ -282,8 +282,6 @@ const processQuizUpdates = async () => {
                         row.error_message = error.message;
                     }
                 });
-                // Continue with next question
-                continue;
             }
         }
 
