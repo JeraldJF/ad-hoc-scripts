@@ -158,7 +158,7 @@ To run the quiz language update script:
 
 2. Set the required environment variables (see Configuration section)
 
-3. Run the update the quiz language:
+3. Run the script to update quiz language:
 ```bash
 npm run start:quizUpdate
 ```
