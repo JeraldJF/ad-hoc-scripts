@@ -120,9 +120,16 @@ const processQuizUpdates = async () => {
                     });
                 }
 
-                const items = response.data.result.items.map((item: any) => ({
-                    identifier: item.identifier,
-                    question_code: item.code
+                const returnedItems = response.data.result.items;
+
+                const codeToIdentifierMap = new Map<string, string>();
+                returnedItems.forEach((item: any) => {
+                    codeToIdentifierMap.set(item.code, item.identifier);
+                });
+
+                const items = filters.map(code => ({
+                    question_code: code,
+                    identifier: codeToIdentifierMap.get(code) || ''  // fallback if somehow missing
                 }));
 
                 updatedMapping[quiz_code] = items;
