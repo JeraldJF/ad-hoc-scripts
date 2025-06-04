@@ -6,7 +6,7 @@ export const questionConfig = {
     }
 };
 
-export const assessmentConfig = {
+export const quizConfig = {
     csvPath: process.env.QUIZ_CSV_PATH || './data/quiz-update.csv',
     createdBy: globalConfig.createdBy || '',
     organisation: globalConfig.organisation || ['FMPS Org'],

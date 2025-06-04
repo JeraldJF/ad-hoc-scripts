@@ -5,8 +5,9 @@ import { getAuthToken } from '../services/authService';
 import globalConfig from '../globalConfigs';
 import { routes } from './config/routes';
 import { getAssessmentItem, getContent, publishContent, reviewContent, updateContent } from './service/quizService';
-import { ALLOWED_LANGUAGES, assessmentConfig, assessmentDefaultValues } from './config/config';
+import { ALLOWED_LANGUAGES, quizConfig, assessmentDefaultValues } from './config/config';
 import parseCsv from '../services/csv';
+const REQUIRED_HEADERS = ['quiz_code', 'question_code', 'language'];
 
 interface QuizUpdateRow {
     quiz_code: string;
@@ -30,9 +31,14 @@ interface ParsedCsvResult {
 // Method to read and parse quiz-update.csv
 const readQuizUpdateCSV = async (): Promise<ParsedCsvResult> => {
     try {
-        const rows = await parseCsv(assessmentConfig.csvPath);
-        const headers = rows[0];
+        const rows = await parseCsv(quizConfig.csvPath);
+        const headers = rows[0].map(header => header.trim());
         const dataRows = rows.slice(1);
+
+        const missingHeaders = REQUIRED_HEADERS.filter(h => !headers.includes(h));
+        if (missingHeaders.length > 0) {
+            throw new Error(`Missing required headers: ${missingHeaders.join(', ')}`);
+        }
 
         // Convert each row into an object using the headers
         const parsedRows = dataRows.map(row =>
@@ -346,7 +352,6 @@ const processQuizUpdates = async () => {
                     })
                 }
                 await updateContent(identifier, versionKey, updateData);
-                console.log(`Quiz ${quiz_code} updated successfully.`)
                 statusReport.forEach(row => {
                     if (row.quiz_code === quiz_code && row.error_message === 'none') {
                         row.status = 'Quiz Updated';
@@ -358,7 +363,7 @@ const processQuizUpdates = async () => {
                 await publishContent(identifier);
 
                 // Update final status after publishing
-                console.log(`Quiz ${quiz_code} published successfully.`);
+                console.log(`Quiz ${quiz_code} updated and published successfully.`);
                 statusReport.forEach(row => {
                     if (row.quiz_code === quiz_code && row.status === 'Quiz Updated') {
                         row.status = 'Published';

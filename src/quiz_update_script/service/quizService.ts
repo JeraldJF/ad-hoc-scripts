@@ -1,7 +1,7 @@
 import axios from "axios";
 import globalConfig from "../../globalConfigs";
 import { routes } from "../config/routes";
-import { assessmentConfig, questionConfig } from "../config/config";
+import { quizConfig, questionConfig } from "../config/config";
 
 export async function getAssessmentItem(identifier: string): Promise<any> {
     const headers = {
@@ -52,7 +52,7 @@ export async function updateContent(
         request: {
             content: {
                 versionKey,
-                lastUpdatedBy: assessmentConfig.createdBy,
+                lastUpdatedBy: quizConfig.createdBy,
                 stageIcons: updateData.stageIcons || "",
                 totalQuestions: updateData.totalQuestions || 0,
                 totalScore: updateData.totalScore || 0,
@@ -63,14 +63,14 @@ export async function updateContent(
                 plugins: updateData.plugins || [],
                 body: updateData.body || "",
                 copyright: questionConfig.metadata.copyright,
-                organisation: assessmentConfig.organisation || [],
-                consumerId: assessmentConfig.createdBy || ''
+                organisation: quizConfig.organisation || [],
+                consumerId: quizConfig.createdBy || ''
             }
         }
     };
 
     const headers = {
-        'X-Channel-Id': assessmentConfig.channelId,
+        'X-Channel-Id': quizConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': globalConfig.apiAuthKey,
         'x-authenticated-user-token': globalConfig.creatorUserToken
@@ -87,7 +87,7 @@ export async function updateContent(
 
 export async function reviewContent(identifier: string): Promise<void> {
     const headers = {
-        'X-Channel-Id': assessmentConfig.channelId,
+        'X-Channel-Id': quizConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': globalConfig.apiAuthKey,
         'x-authenticated-user-token': globalConfig.creatorUserToken
@@ -110,7 +110,7 @@ export async function reviewContent(identifier: string): Promise<void> {
 
 export async function publishContent(identifier: string): Promise<void> {
     const headers = {
-        'X-Channel-Id': assessmentConfig.channelId,
+        'X-Channel-Id': quizConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': globalConfig.apiAuthKey,
         'x-authenticated-user-token': globalConfig.reviewerUserToken
@@ -119,7 +119,7 @@ export async function publishContent(identifier: string): Promise<void> {
     const body = {
         request: {
             content: {
-                lastPublishedBy: assessmentConfig.createdBy
+                lastPublishedBy: quizConfig.createdBy
             }
         }
     };
