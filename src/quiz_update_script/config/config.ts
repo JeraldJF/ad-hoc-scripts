@@ -2,16 +2,16 @@ import globalConfig from "../../globalConfigs";
 
 export const questionConfig = {
     metadata: {
-        copyright: process.env.COPYRIGHT || 'FMPS Org'
+        copyright: process.env.COPYRIGHT
     }
 };
 
 export const quizConfig = {
     csvPath: process.env.QUIZ_CSV_PATH || './data/quiz-update.csv',
-    createdBy: globalConfig.createdBy || '',
-    publishedBy: globalConfig.publishedBy || '',
-    organisation: globalConfig.organisation || ['FMPS Org'],
-    channelId: globalConfig.channelId || ''
+    createdBy: globalConfig.createdBy,
+    publishedBy: globalConfig.publishedBy,
+    organisation: globalConfig.organisation,
+    channelId: globalConfig.channelId
 };
 
 export const assessmentDefaultValues = {

@@ -131,8 +131,8 @@ export async function createQuestion(
                     itemType: questionConfig.defaultValues.itemType,
                     version: questionConfig.defaultValues.version,
                     category: questionConfig.defaultValues.category,
-                    createdBy: assessmentConfig.createdBy,
-                    channel: assessmentConfig.channelId,
+                    createdBy: globalConfig.createdBy,
+                    channel: globalConfig.channelId,
                     type: questionConfig.defaultValues.type,
                     template: questionConfig.defaultValues.template,
                     template_id: questionConfig.defaultValues.template_id,
@@ -162,7 +162,7 @@ export async function createQuestion(
     };
 
     const headers = {
-        'X-Channel-Id': assessmentConfig.channelId,
+        'X-Channel-Id': globalConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': config.apiAuthKey,
         'x-authenticated-user-token': globalConfig.creatorUserToken

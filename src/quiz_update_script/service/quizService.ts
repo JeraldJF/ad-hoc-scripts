@@ -52,7 +52,7 @@ export async function updateContent(
         request: {
             content: {
                 versionKey,
-                lastUpdatedBy: quizConfig.createdBy,
+                lastUpdatedBy: globalConfig.createdBy,
                 stageIcons: updateData.stageIcons || "",
                 totalQuestions: updateData.totalQuestions || 0,
                 totalScore: updateData.totalScore || 0,
@@ -64,13 +64,13 @@ export async function updateContent(
                 body: updateData.body || "",
                 copyright: questionConfig.metadata.copyright,
                 organisation: quizConfig.organisation || [],
-                consumerId: quizConfig.createdBy || ''
+                consumerId: globalConfig.createdBy || ''
             }
         }
     };
 
     const headers = {
-        'X-Channel-Id': quizConfig.channelId,
+        'X-Channel-Id': globalConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': globalConfig.apiAuthKey,
         'x-authenticated-user-token': globalConfig.creatorUserToken
@@ -87,7 +87,7 @@ export async function updateContent(
 
 export async function reviewContent(identifier: string): Promise<void> {
     const headers = {
-        'X-Channel-Id': quizConfig.channelId,
+        'X-Channel-Id': globalConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': globalConfig.apiAuthKey,
         'x-authenticated-user-token': globalConfig.creatorUserToken
@@ -110,7 +110,7 @@ export async function reviewContent(identifier: string): Promise<void> {
 
 export async function publishContent(identifier: string): Promise<void> {
     const headers = {
-        'X-Channel-Id': quizConfig.channelId,
+        'X-Channel-Id': globalConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': globalConfig.apiAuthKey,
         'x-authenticated-user-token': globalConfig.reviewerUserToken
@@ -119,7 +119,7 @@ export async function publishContent(identifier: string): Promise<void> {
     const body = {
         request: {
             content: {
-                lastPublishedBy: quizConfig.publishedBy
+                lastPublishedBy: globalConfig.publishedBy
             }
         }
     };

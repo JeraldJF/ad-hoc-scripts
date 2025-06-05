@@ -208,7 +208,7 @@ const processQuizUpdates = async () => {
                         framework: assessmentItem.framework,
                         itemType: assessmentItem.itemType,
                         version: assessmentItem.version,
-                        createdBy: assessmentItem.createdBy,
+                        createdBy: globalConfig.createdBy,
                         channel: assessmentItem.channel,
                         templateId: assessmentItem.templateId,
                         template: assessmentItem.template,

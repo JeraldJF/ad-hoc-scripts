@@ -62,9 +62,9 @@ export async function createAssessment(
         maxAttempts,
         description: "Enter description for Assessment",
         language: [language],
-        createdBy: assessmentConfig.createdBy,
+        createdBy: globalConfig.createdBy,
         organisation: assessmentConfig.organisation,
-        createdFor: [assessmentConfig.channelId],
+        createdFor: [globalConfig.channelId],
         framework: assessmentConfig.framework,
         mimeType: assessmentConfig.mimeType,
         creator: assessmentConfig.creator,
@@ -82,7 +82,7 @@ export async function createAssessment(
     };
 
     const headers = {
-        'X-Channel-Id': assessmentConfig.channelId,
+        'X-Channel-Id': globalConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': config.apiAuthKey,
         'x-authenticated-user-token': globalConfig.creatorUserToken
@@ -110,7 +110,7 @@ export async function updateContent(
         request: {
             content: {
                 versionKey,
-                lastUpdatedBy: assessmentConfig.createdBy,
+                lastUpdatedBy: globalConfig.createdBy,
                 stageIcons: updateData.stageIcons || "",
                 totalQuestions: updateData.totalQuestions || 0,
                 totalScore: updateData.totalScore || 0,
@@ -122,13 +122,13 @@ export async function updateContent(
                 body: updateData.body || "",
                 copyright: questionConfig.metadata.copyright,
                 organisation: assessmentConfig.organisation || [],
-                consumerId: assessmentConfig.createdBy || ''
+                consumerId: globalConfig.createdBy || ''
             }
         }
     };
 
     const headers = {
-        'X-Channel-Id': assessmentConfig.channelId,
+        'X-Channel-Id': globalConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': config.apiAuthKey,
         'x-authenticated-user-token': globalConfig.creatorUserToken
@@ -160,7 +160,7 @@ export async function getAssessmentItem(identifier: string): Promise<any> {
 
 export async function reviewContent(identifier: string): Promise<void> {
     const headers = {
-        'X-Channel-Id': assessmentConfig.channelId,
+        'X-Channel-Id': globalConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': config.apiAuthKey,
         'x-authenticated-user-token': globalConfig.creatorUserToken
@@ -183,7 +183,7 @@ export async function reviewContent(identifier: string): Promise<void> {
 
 export async function publishContent(identifier: string): Promise<void> {
     const headers = {
-        'X-Channel-Id': assessmentConfig.channelId,
+        'X-Channel-Id': globalConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': config.apiAuthKey,
         'x-authenticated-user-token': globalConfig.reviewerUserToken
@@ -192,7 +192,7 @@ export async function publishContent(identifier: string): Promise<void> {
     const body = {
         request: {
             content: {
-                lastPublishedBy: assessmentConfig.publishedBy
+                lastPublishedBy: globalConfig.publishedBy
             }
         }
     };

@@ -18,7 +18,7 @@ export async function searchContent(code: string, questionExists?: boolean, quiz
             url: `${config.baseUrl}${routes.searchContent}`,
             headers: {
                 'Content-Type': 'application/json',
-                'X-Channel-Id': config.channelId,
+                'X-Channel-Id': globalConfig.channelId,
                 'Authorization': config.apiAuthKey,
                 'x-authenticated-user-token': globalConfig.creatorUserToken
             },
