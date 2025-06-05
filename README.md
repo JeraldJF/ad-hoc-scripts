@@ -171,7 +171,7 @@ Each CSV file is like a spreadsheet with rows and columns. The first row contain
 
 Used to upload questions with multiple options and answers.
 ```csv
-code,question_text,score,option_1,option_1_is_correct,option_2,option_2_is_correct,...[n number of options with proper number]
+code,question_text,score,language,option_1,option_1_is_correct,option_2,option_2_is_correct,...[n number of options with proper number]
 ```
 This file is used to define questions that will appear in quizzes. Each row represents one question. You can add as many options as needed by continuing the pattern: option_3, option_3_is_correct, and so on.
 
@@ -182,9 +182,10 @@ This file is used to define questions that will appear in quizzes. Each row repr
 | `score`               | Points awarded for the correct answer              |
 | `option_X`            | Answer choice text (X = 1, 2, 3...)                |
 | `option_X_is_correct` | `TRUE` if correct, `FALSE` otherwise               |
+| `language`            | Language of the questions                          |
 
 Example row:
-`QZ001,What is the capital of France?,5,Paris,TRUE,Lyon,FALSE`
+`QZ001,What is the capital of France?,5,Paris,TRUE,Lyon,FALSE,English`
 
 ### Quiz Data CSV Columns
 
