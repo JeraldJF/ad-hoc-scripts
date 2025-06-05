@@ -399,7 +399,7 @@ const processQuizUpdates = async () => {
         ...statusReport.map(row =>
             allHeaders.map(header => {
                 const value = row[header] || '';
-                return value.includes(',') ? `"${value}"` : value;
+                return value;
             }).join(',')
         )
     ].join('\n');
