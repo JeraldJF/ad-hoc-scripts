@@ -1,6 +1,7 @@
 import axios from "axios";
 import globalConfig from "../globalConfigs";
 import { routes } from "../course_enrollment_script/config/routes";
+import jwt from "jsonwebtoken";
 
 export async function getAuthToken(): Promise<{ creatorToken: string, reviewerToken: string }> {
     const headers = {
@@ -42,7 +43,7 @@ export async function getAuthToken(): Promise<{ creatorToken: string, reviewerTo
         });
 
         const creatorRefreshResponse = await axios.post(
-           `${globalConfig.baseUrl}${routes.getToken}`,
+            `${globalConfig.baseUrl}${routes.getToken}`,
             creatorRefreshData,
             { headers }
         );
@@ -64,7 +65,7 @@ export async function getAuthToken(): Promise<{ creatorToken: string, reviewerTo
         });
 
         const reviewerRefreshResponse = await axios.post(
-           `${globalConfig.baseUrl}${routes.getToken}`,
+            `${globalConfig.baseUrl}${routes.getToken}`,
             reviewerRefreshData,
             { headers }
         );
@@ -75,6 +76,31 @@ export async function getAuthToken(): Promise<{ creatorToken: string, reviewerTo
         globalConfig.creatorUserToken = creatorAccessToken;
         globalConfig.reviewerUserToken = reviewerAccessToken;
 
+        const reviewerDecoded = jwt.decode(reviewerAccessToken);
+        const creatorDecoded = jwt.decode(creatorAccessToken);
+        
+        if (creatorDecoded && typeof creatorDecoded === 'object') {
+            const decodedSub = creatorDecoded.sub;
+
+            let organisationId: string = globalConfig.channelId;
+
+            const contentCreatorRole = creatorDecoded.roles.find(
+                (role: any) => role.role === globalConfig.contentCreatorRoleName
+            );
+
+            if (contentCreatorRole && contentCreatorRole.scope?.length > 0) {
+                organisationId = contentCreatorRole.scope[0].organisationId;
+            }
+            const createdById = decodedSub ? decodedSub.split(':').pop() as string : globalConfig.createdBy
+            globalConfig.createdBy = createdById
+            globalConfig.channelId = organisationId;
+        }
+
+        if (reviewerDecoded && typeof reviewerDecoded === 'object') {
+            const decodedSub = reviewerDecoded.sub;
+            const publishedById = decodedSub ? decodedSub.split(':').pop() as string : globalConfig.publishedBy
+            globalConfig.publishedBy = publishedById
+        }
         return {
             creatorToken: creatorAccessToken,
             reviewerToken: reviewerAccessToken

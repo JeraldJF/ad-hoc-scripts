@@ -7,6 +7,7 @@ import path from 'path';
 import { getAuthToken } from '../services/authService';
 import _ from 'lodash';
 import { config } from './config/config';
+import { validateCsvHeaders } from '../services/contentService';
 const REQUIRED_HEADERS = ['learner_profile_code', 'email'];
 
 interface EnrollmentResult {
@@ -26,11 +27,7 @@ async function processEnrollments() {
     await getAuthToken();
     const rows = await parseCsv(courseConfig.userLearnerPath);
     const initialHeaderRow = rows[0].map(header => header.trim());
-    const missingHeaders = REQUIRED_HEADERS.filter(h => !initialHeaderRow.includes(h));
-    if (missingHeaders.length > 0) {
-        console.log(`Missing required headers: ${missingHeaders.join(', ')}`);
-        throw new Error(`Missing required headers: ${missingHeaders.join(', ')}`);
-    }
+    validateCsvHeaders(initialHeaderRow, REQUIRED_HEADERS);
     const dataRows = rows.slice(1);
     const enrollData = dataRows.map(row =>
         initialHeaderRow.reduce((acc, header, i) => {

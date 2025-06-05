@@ -7,6 +7,7 @@ import { routes } from './config/routes';
 import { getAssessmentItem, getContent, publishContent, reviewContent, updateContent } from './service/quizService';
 import { quizConfig, assessmentDefaultValues } from './config/config';
 import parseCsv from '../services/csv';
+import { validateCsvHeaders } from '../services/contentService';
 const REQUIRED_HEADERS = ['quiz_code', 'question_code', 'language'];
 
 interface QuizUpdateRow {
@@ -35,10 +36,7 @@ const readQuizUpdateCSV = async (): Promise<ParsedCsvResult> => {
         const headers = rows[0].map(header => header.trim());
         const dataRows = rows.slice(1);
 
-        const missingHeaders = REQUIRED_HEADERS.filter(h => !headers.includes(h));
-        if (missingHeaders.length > 0) {
-            throw new Error(`Missing required headers: ${missingHeaders.join(', ')}`);
-        }
+        validateCsvHeaders(headers, REQUIRED_HEADERS);
         dataRows.forEach((row, index) => {
             if (row.some(col => col.trim() === '')) {
                 throw new Error(`Empty value found at row ${index + 2}. All columns must be non-empty.`);
@@ -182,7 +180,7 @@ const processQuizUpdates = async () => {
                 }
 
                 if (language) {
-                    assessmentItem.language = [`${language}`];
+                    assessmentItem.language = [language];
                     if (assessmentItem.body) {
                         const bodyData = JSON.parse(assessmentItem.body);
                         if (bodyData.data.config.metadata) {

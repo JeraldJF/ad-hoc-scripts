@@ -104,7 +104,7 @@ export async function createQuestion(
                     name: `${title}\n`,
                     title: `${title}\n`,
                     copyright: questionConfig.metadata.copyright,
-                    language: [`${language}`],
+                    language: [language],
                     qlevel: "EASY",
                     category: "MCQ"
                 },
@@ -145,7 +145,7 @@ export async function createQuestion(
                     title: `${title}\n`,
                     copyright: questionConfig.metadata.copyright,
                     qlevel: "EASY",
-                    language: [`${language}`],
+                    language: [language],
                     options: [
                         {
                             answer: true,

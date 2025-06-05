@@ -254,7 +254,7 @@ quiz_code,question_code,language
 | `language`             | Language of the questions to be updated                     |
 
 Example row:
-`FMPS_C028_QG28_004,FMPS_C028_QG28_Q9_004,Arabic`
+`QUIZ_01_004,QU_01_004,Arabic`
 
 ## Status Reports
 

@@ -7,5 +7,6 @@ export const courseConfig = {
     organisation: globalConfig.organisation || ['FMPS Org'],
     framework: globalConfig.framework || 'FMPS',
     creator: globalConfig.creator || 'Content Creator FMPS',
-    channelId: globalConfig.channelId || '01429195271738982411'
+    channelId: globalConfig.channelId || '01429195271738982411',
+    publishedBy: globalConfig.publishedBy || ''
 }

@@ -192,7 +192,7 @@ export async function publishContent(identifier: string): Promise<void> {
     const body = {
         request: {
             content: {
-                lastPublishedBy: assessmentConfig.createdBy
+                lastPublishedBy: assessmentConfig.publishedBy
             }
         }
     };

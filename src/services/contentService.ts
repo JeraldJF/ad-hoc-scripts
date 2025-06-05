@@ -67,3 +67,11 @@ export async function searchContent(code: string, questionExists?: boolean, quiz
         return { exists: true };
     }
 }
+
+export const validateCsvHeaders = (headers: string[], REQUIRED_HEADERS: string[]) => {
+    const missingHeaders = REQUIRED_HEADERS.filter(h => !headers.includes(h));
+    if (missingHeaders.length > 0) {
+        console.log(`Missing required headers: ${missingHeaders.join(', ')}`);
+        throw new Error(`Missing required headers: ${missingHeaders.join(', ')}`);
+    }
+}

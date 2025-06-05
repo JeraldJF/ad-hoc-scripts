@@ -12,11 +12,13 @@ const globalConfig = {
     grant_type: process.env.GRANT_TYPE || 'password',
     channelId: process.env.CHANNEL_ID || '',
     createdBy: process.env.CREATED_BY || '',
+    publishedBy: process.env.PUBLISHED_BY || '',
     organisation: process.env.ORGANISATION ? [process.env.ORGANISATION] : ['FMPS Org'],
     framework: process.env.FRAMEWORK || 'FMPS',
     mimeType: process.env.MIME_TYPE || 'application/vnd.ekstep.ecml-archive',
     creator: process.env.CREATOR || 'Content Creator',
     waitInterval: Number(process.env.WAIT_INTERVAL) || 5000,
+    contentCreatorRoleName: process.env.CONTENT_CREATOR_ROLE_NAME || 'CONTENT_CREATOR',
     ALLOWED_LANGUAGES: process.env.ALLOWED_LANGUAGES ? process.env.ALLOWED_LANGUAGES.split(',') : ['English', 'French', 'Arabic']
 }
 
