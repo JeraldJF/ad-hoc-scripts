@@ -20,6 +20,8 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/lodash": "^4.17.17",
     "@types/node": "^20.1.0",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
