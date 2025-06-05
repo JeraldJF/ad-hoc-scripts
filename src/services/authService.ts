@@ -76,15 +76,28 @@ export async function getAuthToken(): Promise<{ creatorToken: string, reviewerTo
         globalConfig.creatorUserToken = creatorAccessToken;
         globalConfig.reviewerUserToken = reviewerAccessToken;
 
-        const reviewerDecoded = jwt.decode(reviewerAccessToken);
-        const creatorDecoded = jwt.decode(creatorAccessToken);
-        
+        let reviewerDecoded: any;
+        let creatorDecoded: any;
+        try {
+            reviewerDecoded = jwt.decode(reviewerAccessToken);
+            if (!reviewerDecoded) {
+                throw new Error("Failed to decode reviewer access token");
+            }
+
+            creatorDecoded = jwt.decode(creatorAccessToken);
+            if (!creatorDecoded) {
+                throw new Error("Failed to decode creator access token");
+            }
+        } catch (error: any) {
+            throw new Error(`Token decoding failed: ${error.message}`);
+        }
+
         if (creatorDecoded && typeof creatorDecoded === 'object') {
             const decodedSub = creatorDecoded.sub;
 
             let organisationId: string = globalConfig.channelId;
 
-            const contentCreatorRole = creatorDecoded.roles.find(
+            const contentCreatorRole = creatorDecoded.roles?.find(
                 (role: any) => role.role === globalConfig.contentCreatorRoleName
             );
 
