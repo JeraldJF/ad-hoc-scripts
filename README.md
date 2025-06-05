@@ -149,6 +149,20 @@ To run the course enrollment script:
 npm run start:enroll
 ```
 
+### 4. Quiz Language Update Script
+
+To run the quiz language update script:
+
+1. Place the quiz language update CSV file in the `data` directory in the root folder:
+   - Quiz language update data: `data/quiz-update.csv`
+
+2. Set the required environment variables (see Configuration section)
+
+3. Run the quiz language update script:
+```bash
+npm run start:quizUpdate
+```
+
 ## CSV File Format
 
 Each CSV file is like a spreadsheet with rows and columns. The first row contains column names. Below is a guide to what each column means for different CSV files.
@@ -157,7 +171,7 @@ Each CSV file is like a spreadsheet with rows and columns. The first row contain
 
 Used to upload questions with multiple options and answers.
 ```csv
-code,question_text,score,option_1,option_1_is_correct,option_2,option_2_is_correct,...[n number of options with proper number]
+code,question_text,score,language,option_1,option_1_is_correct,option_2,option_2_is_correct,...[n number of options with proper number]
 ```
 This file is used to define questions that will appear in quizzes. Each row represents one question. You can add as many options as needed by continuing the pattern: option_3, option_3_is_correct, and so on.
 
@@ -168,9 +182,10 @@ This file is used to define questions that will appear in quizzes. Each row repr
 | `score`               | Points awarded for the correct answer              |
 | `option_X`            | Answer choice text (X = 1, 2, 3...)                |
 | `option_X_is_correct` | `TRUE` if correct, `FALSE` otherwise               |
+| `language`            | Language of the questions                          |
 
 Example row:
-`QZ001,What is the capital of France?,5,Paris,TRUE,Lyon,FALSE`
+`QZ001,What is the capital of France?,5,Paris,TRUE,Lyon,FALSE,English`
 
 ### Quiz Data CSV Columns
 
@@ -226,6 +241,21 @@ This file links user emails to specific learner profile codes for enrollment.
 Example row:
 `user@example.com,LP001`
 
+### Quiz Language Update Data CSV Columns
+
+Used to define the quiz code, associated question code, and target language to be updated.
+```csv
+quiz_code,question_code,language
+```
+
+| Column                 | Description                                                 |
+| ---------------------- | ----------------------------------------------------------- |
+| `quiz_code`            | Quiz code that has questions attached                       |
+| `question_code`        | Question code that must be updated                          |
+| `language`             | Language of the questions to be updated                     |
+
+Example row:
+`QUIZ_01_004,QU_01_004,Arabic`
 
 ## Status Reports
 
@@ -241,6 +271,9 @@ The scripts will generate status reports in the following locations:
 
 ### Course Enrollment Report
 - `src/reports/enrollment-status.csv`: Contains the course enrollment status for the user.
+
+### Quiz Language Update Report
+- `src/reports/quiz-update-status.csv`: Contains the quiz language update status.
 
 These reports will contain detailed information about the success/failure of each operation, including any error messages if applicable.
 

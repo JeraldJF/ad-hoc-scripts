@@ -3,12 +3,14 @@ import path from 'path';
 import parseCsv from "../services/csv";
 import { createAssessment, updateContent, getAssessmentItem, reviewContent, publishContent } from './services/quizService';
 import { createQuestion } from "./services/questionService";
-import { assessmentConfig, assessmentDefaultValues } from './config/quizConfigs';
+import { assessmentConfig, assessmentDefaultValues, ALLOWED_QUIZ_TYPES } from './config/quizConfigs';
 import { QuestionMapping, QuestionScoreMapping } from './types';
 import { getAuthToken } from '../services/authService';
-import { searchContent } from '../services/contentService';
+import { searchContent, validateCsvHeaders } from '../services/contentService';
 import globalConfig from '../globalConfigs';
 import _ from 'lodash';
+const REQUIRED_QUESTION_HEADERS = ['code', 'question_text', 'score', 'language'];
+const REQUIRED_QUIZ_HEADERS = ['code', 'quiz_name', 'max_attempts', 'language', 'quiz_type', 'questions'];
 
 let questionNodeMap: QuestionMapping = {};
 let questionScoreMap: QuestionScoreMapping = {};
@@ -26,8 +28,10 @@ async function saveQuestionMapping() {
 async function processQuestionCsv() {
     try {
         const rows = await parseCsv(assessmentConfig.questionCsvPath);
-        const headers = rows[0];
+        const headers = rows[0].map(header => header.trim());
         const dataRows = rows.slice(1);
+
+        validateCsvHeaders(headers, REQUIRED_QUESTION_HEADERS);
 
         // Convert each row into an object using the headers
         const parsedRows = dataRows.map(row =>
@@ -51,6 +55,12 @@ async function processQuestionCsv() {
             try {
                 if (Object.keys(row).length >= 3) {
                     const code = row.code;
+                    const language = row.language.trim();
+                    if (!globalConfig.ALLOWED_LANGUAGES.includes(language)) {
+                        console.log(`Invalid language ${language} for code: ${row.code}`);
+                        statusReport.push([row.code, 'Skipped', `Invalid language ${language} for code: ${row.code}`]);
+                        continue;
+                    }
                     if (!code) {
                         throw new Error('Question Code input is missing');
                     }
@@ -99,7 +109,7 @@ async function processQuestionCsv() {
                         }
                     }
 
-                    const nodeId = await createQuestion(code, title, optionPairs, maxScore);
+                    const nodeId = await createQuestion(code, title, optionPairs, maxScore, language);
                     questionNodeMap[`${code}`] = nodeId;
                     uniqueCodes.add(row.code);
                     console.log(`Mapped question code ${code} to node_id ${nodeId} with score ${maxScore}`);
@@ -137,8 +147,10 @@ async function processContentCsv() {
             fs.mkdirSync(resultsDir);
         }
         const rows = await parseCsv(assessmentConfig.csvPath);
-        const headers = rows[0];
+        const headers = rows[0].map(header => header.trim());
         const dataRows = rows.slice(1);
+
+        validateCsvHeaders(headers, REQUIRED_QUIZ_HEADERS);
 
         // Convert each row into an object using the headers
         const parsedRows = dataRows.map(row =>
@@ -187,8 +199,13 @@ async function processContentCsv() {
                     continue
                 }
                 const maxAttempts = parseInt(row.max_attempts, 10);
-                const language = row.language || "English";
-                const contentType = row.quiz_type;
+                const language = row.language.trim();
+                if (!globalConfig.ALLOWED_LANGUAGES.includes(language)) {
+                    console.log(`Invalid language ${language} for quiz code: ${row.code}`);
+                    statusReport.push([row.code, 'Failed', `Invalid language ${language} for quiz code: ${row.code}`]);
+                    continue;
+                }
+                const contentType = row.quiz_type.trim();
                 if (!contentType) {
                     statusReport.push([
                         row.code,
@@ -196,6 +213,14 @@ async function processContentCsv() {
                         `Quiz content type input is missing`
                     ]);
                     continue
+                }
+                if (!ALLOWED_QUIZ_TYPES.includes(contentType)) {
+                    statusReport.push([
+                        row.code,
+                        'Failed',
+                        `Invalid quiz type '${contentType}'.`
+                    ]);
+                    continue;
                 }
                 if (contentType === "assess") {
                     if (!maxAttempts || isNaN(maxAttempts)) {

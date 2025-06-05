@@ -12,7 +12,7 @@ export async function searchCourse(courseCode: string): Promise<{ identifier: st
             url: `${config.baseUrl}${routes.searchCourse}`,
             headers: {
                 'Content-Type': 'application/json',
-                'X-Channel-Id': config.channelId,
+                'X-Channel-Id': globalConfig.channelId,
                 'Authorization': config.apiAuthKey,
                 'x-authenticated-user-token': globalConfig.creatorUserToken
             },
@@ -29,7 +29,7 @@ export async function searchCourse(courseCode: string): Promise<{ identifier: st
                             "FlagReview"
                         ],
                         code: courseCode,
-                        createdBy: courseConfig.createdBy,
+                        createdBy: globalConfig.createdBy,
                         primaryCategory: [
                             "Course"
                         ],
@@ -69,7 +69,7 @@ export async function createLearnerProfile(learnerCode: string, nodeIds: string[
             url: `${config.baseUrl}${routes.createLearnerProfile}`,
             headers: {
                 'Content-Type': 'application/json',
-                'X-Channel-Id': config.channelId,
+                'X-Channel-Id': globalConfig.channelId,
                 'Authorization': config.apiAuthKey,
                 'x-authenticated-user-token': globalConfig.creatorUserToken
             },
@@ -79,13 +79,13 @@ export async function createLearnerProfile(learnerCode: string, nodeIds: string[
                         name: record['learner_profile'], // Using 2nd row from CSV for name
                         code: learnerCode,
                         description: "Enter description for Learner Profile",
-                        createdBy: courseConfig.createdBy,
+                        createdBy: globalConfig.createdBy,
                         organisation: courseConfig.organisation,
-                        createdFor: [courseConfig.channelId],
+                        createdFor: [globalConfig.channelId],
                         framework: courseConfig.framework,
                         mimeType: "application/vnd.ekstep.content-collection",
                         creator: courseConfig.creator,
-                        expiry_date: record['expiry_date'], // Using 4th row from CSV for expiry_date
+                        expiry_date: record['expiry_date'].trim(), // Using 4th row from CSV for expiry_date
                         primaryCategory: "Learner Profile",
                         children: children
                     }
@@ -135,13 +135,13 @@ export async function updateLearnerProfile(
                                 name: record["learner_profile"],
                                 code: learnerCode,
                                 description: "Learner Profile for course enrollment",
-                                createdBy: courseConfig.createdBy,
+                                createdBy: globalConfig.createdBy,
                                 organisation: courseConfig.organisation,
-                                createdFor: [config.channelId],
+                                createdFor: [globalConfig.channelId],
                                 framework: courseConfig.framework,
                                 mimeType: "application/vnd.ekstep.content-collection",
                                 creator: courseConfig.creator,
-                                expiry_date: record["expiry_date"],
+                                expiry_date: record["expiry_date"].trim(),
                                 primaryCategory: "Learner Profile",
                                 children: childrenArray
                             },
@@ -156,7 +156,7 @@ export async function updateLearnerProfile(
                         },
                         ...hierarchyNodes
                     },
-                    lastUpdatedBy: courseConfig.createdBy
+                    lastUpdatedBy: globalConfig.createdBy
                 }
             }
         };
@@ -167,7 +167,7 @@ export async function updateLearnerProfile(
             url: `${config.baseUrl}${routes.updateLearnerProfile}`, // should be /api/collection/v1/hierarchy/update
             headers: {
                 'Content-Type': 'application/json',
-                'X-Channel-Id': config.channelId,
+                'X-Channel-Id': globalConfig.channelId,
                 'Authorization': config.apiAuthKey,
                 'x-authenticated-user-token': globalConfig.creatorUserToken
             },
@@ -189,7 +189,7 @@ export async function getBatchList(courseId: string): Promise<string | null> {
             url: `${config.baseUrl}${routes.listBatch}`,
             headers: {
                 'Content-Type': 'application/json',
-                'X-Channel-Id': config.channelId,
+                'X-Channel-Id': globalConfig.channelId,
                 'Authorization': config.apiAuthKey,
                 'x-authenticated-user-token': globalConfig.creatorUserToken
             },
@@ -228,7 +228,7 @@ export async function enrollInCourse(courseId: string, batchId: string, userId: 
             url: `${config.baseUrl}${routes.enrollUser}`,
             headers: {
                 'Content-Type': 'application/json',
-                'X-Channel-Id': config.channelId,
+                'X-Channel-Id': globalConfig.channelId,
                 'Authorization': config.apiAuthKey,
                 'x-authenticated-user-token': userToken
             },
@@ -250,7 +250,7 @@ export async function enrollInCourse(courseId: string, batchId: string, userId: 
 
 export async function publishContent(identifier: string): Promise<void> {
     const headers = {
-        'X-Channel-Id': courseConfig.channelId,
+        'X-Channel-Id': globalConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': config.apiAuthKey,
         'x-authenticated-user-token': globalConfig.reviewerUserToken
@@ -259,7 +259,7 @@ export async function publishContent(identifier: string): Promise<void> {
     const body = {
         request: {
             content: {
-                lastPublishedBy: courseConfig.createdBy
+                lastPublishedBy: globalConfig.publishedBy
             }
         }
     };
@@ -275,7 +275,7 @@ export async function publishContent(identifier: string): Promise<void> {
 export async function searchLearnerProfile(profileCode: string): Promise<string | null> {
     const headers = {
         'Content-Type': 'application/json',
-        'X-Channel-Id': config.channelId,
+        'X-Channel-Id': globalConfig.channelId,
         'Authorization': config.apiAuthKey,
         'x-authenticated-user-token': globalConfig.creatorUserToken
     };
@@ -314,7 +314,7 @@ export async function searchLearnerProfile(profileCode: string): Promise<string 
 export async function getProfileCourses(profileId: string): Promise<string[]> {
     const headers = {
         'Content-Type': 'application/json',
-        'X-Channel-Id': config.channelId,
+        'X-Channel-Id': globalConfig.channelId,
         'Authorization': config.apiAuthKey,
         'x-authenticated-user-token': globalConfig.creatorUserToken
     };
@@ -340,7 +340,7 @@ export async function getCourseNodeIds(courseIds: string[]): Promise<{ [nodeId: 
     for (const courseId of courseIds) {
         const headers = {
             'Content-Type': 'application/json',
-            'X-Channel-Id': config.channelId,
+            'X-Channel-Id': globalConfig.channelId,
             'Authorization': config.apiAuthKey,
             'x-authenticated-user-token': globalConfig.creatorUserToken
         };

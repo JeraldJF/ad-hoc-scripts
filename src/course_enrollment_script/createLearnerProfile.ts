@@ -4,9 +4,10 @@ import { createLearnerProfile, getBatchList, publishContent, searchCourse, updat
 import { courseConfig } from './config/courseConfig';
 import path from 'path';
 import { getAuthToken } from '../services/authService';
-import { searchContent } from '../services/contentService';
+import { searchContent, validateCsvHeaders } from '../services/contentService';
 import globalConfig from '../globalConfigs';
 import _ from 'lodash';
+const REQUIRED_HEADERS = ['learner_profile_code', 'learner_profile', 'course_code', 'expiry_date'];
 
 interface CourseMapping {
     [key: string]: Map<string, string>;
@@ -37,7 +38,8 @@ async function processLearnerProfiles() {
 
     // Read learner-course mapping
     const learnerCourseRows = await parseCsv(courseConfig.learnerCoursePath);
-    const headerRow = learnerCourseRows[0];
+    const headerRow = learnerCourseRows[0].map(header => header.trim());
+    validateCsvHeaders(headerRow, REQUIRED_HEADERS);
     const updatedHeaderRow = ['learner_profile_code', 'status', 'reason'];
     const dataRows = learnerCourseRows.slice(1);
 

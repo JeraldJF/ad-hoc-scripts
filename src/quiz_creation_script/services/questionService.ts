@@ -46,6 +46,7 @@ interface QuestionBody {
                 copyright: string;
                 qlevel: string;
                 category: string;
+                language: string[];
             };
             max_time: number;
             max_score: number;
@@ -63,7 +64,8 @@ export async function createQuestion(
     code: string,
     title: string,
     optionPairs: { text: string; isCorrect: boolean }[],
-    maxScore: number
+    maxScore: number,
+    language: string
 ): Promise<string> {
     // Filter out any empty options
     const validOptions = optionPairs.filter(pair => pair.text && pair.text.trim() !== '');
@@ -102,6 +104,7 @@ export async function createQuestion(
                     name: `${title}\n`,
                     title: `${title}\n`,
                     copyright: questionConfig.metadata.copyright,
+                    language: [language],
                     qlevel: "EASY",
                     category: "MCQ"
                 },
@@ -128,8 +131,8 @@ export async function createQuestion(
                     itemType: questionConfig.defaultValues.itemType,
                     version: questionConfig.defaultValues.version,
                     category: questionConfig.defaultValues.category,
-                    createdBy: assessmentConfig.createdBy,
-                    channel: assessmentConfig.channelId,
+                    createdBy: globalConfig.createdBy,
+                    channel: globalConfig.channelId,
                     type: questionConfig.defaultValues.type,
                     template: questionConfig.defaultValues.template,
                     template_id: questionConfig.defaultValues.template_id,
@@ -142,6 +145,7 @@ export async function createQuestion(
                     title: `${title}\n`,
                     copyright: questionConfig.metadata.copyright,
                     qlevel: "EASY",
+                    language: [language],
                     options: [
                         {
                             answer: true,
@@ -158,7 +162,7 @@ export async function createQuestion(
     };
 
     const headers = {
-        'X-Channel-Id': assessmentConfig.channelId,
+        'X-Channel-Id': globalConfig.channelId,
         'Content-Type': 'application/json',
         'Authorization': config.apiAuthKey,
         'x-authenticated-user-token': globalConfig.creatorUserToken

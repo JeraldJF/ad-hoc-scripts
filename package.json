@@ -4,6 +4,7 @@
   "description": "A Node.js script that processes a CSV file and makes API calls based on its content.",
   "scripts": {
     "start:quiz": "ts-node -r dotenv/config src/quiz_creation_script/index.ts",
+    "start:quizUpdate": "ts-node -r dotenv/config src/quiz_update_script/index.ts",
     "start:course": "ts-node -r dotenv/config src/course_enrollment_script/index.ts",
     "start:learnerProfile": "ts-node -r dotenv/config src/course_enrollment_script/createLearnerProfile.ts",
     "start:enroll": "ts-node -r dotenv/config src/course_enrollment_script/enrollLearners.ts",
@@ -15,9 +16,12 @@
     "axios": "^1.4.0",
     "csv-parse": "^5.4.0",
     "dotenv": "^16.5.0",
+    "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/lodash": "^4.17.17",
     "@types/node": "^20.1.0",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",

@@ -5,9 +5,10 @@ import { enrollInCourse, getBatchList, getCourseNodeIds, getProfileCourses, sear
 import { courseConfig } from './config/courseConfig';
 import path from 'path';
 import { getAuthToken } from '../services/authService';
-import globalConfig from '../globalConfigs';
 import _ from 'lodash';
 import { config } from './config/config';
+import { validateCsvHeaders } from '../services/contentService';
+const REQUIRED_HEADERS = ['learner_profile_code', 'email'];
 
 interface EnrollmentResult {
     userId: string;
@@ -25,8 +26,9 @@ function parseLearnerProfileCodes(code: string): string[] {
 async function processEnrollments() {
     await getAuthToken();
     const rows = await parseCsv(courseConfig.userLearnerPath);
+    const initialHeaderRow = rows[0].map(header => header.trim());
+    validateCsvHeaders(initialHeaderRow, REQUIRED_HEADERS);
     const dataRows = rows.slice(1);
-    const initialHeaderRow = rows[0];
     const enrollData = dataRows.map(row =>
         initialHeaderRow.reduce((acc, header, i) => {
             acc[header] = row[i];
@@ -39,7 +41,7 @@ async function processEnrollments() {
     const userEnrollments = new Map<string, Set<string>>();
 
     for (const record of enrollData) {
-        const email = record['email'];
+        const email = record['email'].trim();
         if (!email) {
             results.push({
                 userId: email,

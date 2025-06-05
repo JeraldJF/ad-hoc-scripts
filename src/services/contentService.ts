@@ -18,7 +18,7 @@ export async function searchContent(code: string, questionExists?: boolean, quiz
             url: `${config.baseUrl}${routes.searchContent}`,
             headers: {
                 'Content-Type': 'application/json',
-                'X-Channel-Id': config.channelId,
+                'X-Channel-Id': globalConfig.channelId,
                 'Authorization': config.apiAuthKey,
                 'x-authenticated-user-token': globalConfig.creatorUserToken
             },
@@ -65,5 +65,13 @@ export async function searchContent(code: string, questionExists?: boolean, quiz
             throw error;
         }
         return { exists: true };
+    }
+}
+
+export const validateCsvHeaders = (headers: string[], REQUIRED_HEADERS: string[]) => {
+    const missingHeaders = REQUIRED_HEADERS.filter(h => !headers.includes(h));
+    if (missingHeaders.length > 0) {
+        console.log(`Missing required headers: ${missingHeaders.join(', ')}`);
+        throw new Error(`Missing required headers: ${missingHeaders.join(', ')}`);
     }
 }
