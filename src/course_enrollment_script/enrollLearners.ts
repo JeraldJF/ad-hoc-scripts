@@ -39,14 +39,11 @@ async function processEnrollment(
     learnerProfileCode: string,
     nodeId: string,
     courseCode: string,
-    userEnrollments: Map<string, Set<string>>,
-    stats: EnrollmentStats
+    userEnrollments: Map<string, Set<string>>
 ): Promise<EnrollmentResult> {
     try {
         if (userEnrollments.get(email)?.has(nodeId)) {
             console.log(`    User already enrolled in course ${courseCode}`);
-            stats.failureCount++;
-            console.log(`User: ${email} => ✅ Successful course enrollments: ${stats.successCount}, ❌ Failure: ${stats.failureCount}`);
             return {
                 userId: email,
                 learnerProfile: learnerProfileCode,
@@ -59,8 +56,6 @@ async function processEnrollment(
         const batchId = await getBatchList(nodeId);
         if (!batchId) {
             console.log(`    No batch found for course ${courseCode}`);
-            stats.failureCount++;
-            console.log(`User: ${email} => ✅ Successful course enrollments: ${stats.successCount}, ❌ Failure: ${stats.failureCount}`);
             return {
                 userId: email,
                 learnerProfile: learnerProfileCode,
@@ -90,8 +85,6 @@ async function processEnrollment(
             errorMessage = enrollError?.message || 'Failed to enroll to the course';
         }
         console.error(`    Failed to enroll in course ${courseCode}:`, errorMessage);
-        stats.failureCount++;
-        console.log(`User: ${email} => ✅ Successful course enrollments: ${stats.successCount}, ❌ Failure: ${stats.failureCount}`);
         const isAlreadyEnrolled = errorMessage.toLowerCase().includes('user has already enrolled');
         return {
             userId: email,
@@ -154,7 +147,6 @@ async function processUserEnrollments(
             learnerProfileCodes.map(async (learnerProfileCode) => {
                 const profileId = await searchLearnerProfile(learnerProfileCode);
                 if (!profileId) {
-                    stats.failureCount++;
                     console.log(`User: ${email} => ✅ Successful course enrollments: ${stats.successCount}, ❌ Failure: ${stats.failureCount}`);
                     return [{
                         userId: email,
@@ -167,7 +159,6 @@ async function processUserEnrollments(
 
                 const courseNodeIds = await getProfileCourses(profileId);
                 if (courseNodeIds.length === 0) {
-                    stats.failureCount++;
                     console.log(`User: ${email} => ✅ Successful course enrollments: ${stats.successCount}, ❌ Failure: ${stats.failureCount}`);
                     return [{
                         userId: email,
@@ -181,7 +172,6 @@ async function processUserEnrollments(
                 const nodeIdToCourseCodeMap = await getCourseNodeIds(courseNodeIds);
                 const nodeIds = Object.keys(nodeIdToCourseCodeMap);
                 if (nodeIds.length === 0) {
-                    stats.failureCount++;
                     console.log(`User: ${email} => ✅ Successful course enrollments: ${stats.successCount}, ❌ Failure: ${stats.failureCount}`);
                     return [{
                         userId: email,
@@ -203,8 +193,7 @@ async function processUserEnrollments(
                             learnerProfileCode,
                             nodeId,
                             nodeIdToCourseCodeMap[nodeId],
-                            userEnrollments,
-                            stats
+                            userEnrollments
                         ))
                     )
                 );
